@@ -2,7 +2,7 @@ class IoEventHook<TData> {
     constructor(private ioObj: any, private evtName: string) {
 
     }
-    
+
     public handle(callback: (data: TData) => void) {
         return this.ioObj.on(this.evtName, callback);
     }
