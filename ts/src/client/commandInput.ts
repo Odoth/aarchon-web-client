@@ -121,7 +121,7 @@ export class CommandInput {
             case 100:
               GlEvent.sendCommand.fire({value: "west"});
               return false;
-            case 101:
+            case 101: // numpad 5
               GlEvent.sendCommand.fire({value: "look"});
               return false;
             case 102:
@@ -136,11 +136,17 @@ export class CommandInput {
             case 105:
               GlEvent.sendCommand.fire({value: "northeast"});
               return false;
+            case 106: // numpad *
+              GlEvent.sendCommand.fire({value: "scan"});
+              return false;
             case 107:
               GlEvent.sendCommand.fire({value: "down"});
               return false;
             case 109:
               GlEvent.sendCommand.fire({value: "up"});
+              return false;
+            case 111: // numpad /
+              GlEvent.sendCommand.fire({value: "exits"})
               return false;
             case 13: // enter
                 if (event.shiftKey) {
