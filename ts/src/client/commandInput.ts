@@ -110,48 +110,37 @@ export class CommandInput {
     private keydown(event: KeyboardEvent): boolean {
         switch (event.which) {
             case 97:
-              this.$cmdInput.val("southwest");
-              this.sendCmd();
+              GlEvent.sendCommand.fire({value: "southwest"})
               return false;
             case 98:
-              this.$cmdInput.val("south");
-              this.sendCmd()
+              GlEvent.sendCommand.fire({value: "south"});
               return false;
             case 99:
-              this.$cmdInput.val("southeast");
-              this.sendCmd();
+              GlEvent.sendCommand.fire({value: "southeast"});
               return false;
             case 100:
-              this.$cmdInput.val("west");
-              this.sendCmd();
+              GlEvent.sendCommand.fire({value: "west"});
               return false;
             case 101:
-              this.$cmdInput.val("look");
-              this.sendCmd();
+              GlEvent.sendCommand.fire({value: "look"});
               return false;
             case 102:
-              this.$cmdInput.val("east");
-              this.sendCmd();
+              GlEvent.sendCommand.fire({value: "east"});
               return false;
             case 103:
-              this.$cmdInput.val("northwest");
-              this.sendCmd();
+              GlEvent.sendCommand.fire({value: "northwest"});
               return false;
             case 104:
-              this.$cmdInput.val("north");
-              this.sendCmd();
+              GlEvent.sendCommand.fire({value: "north"});
               return false;
             case 105:
-              this.$cmdInput.val("northeast");
-              this.sendCmd();
+              GlEvent.sendCommand.fire({value: "northeast"});
               return false;
             case 107:
-              this.$cmdInput.val("down");
-              this.sendCmd();
+              GlEvent.sendCommand.fire({value: "down"});
               return false;
             case 109:
-              this.$cmdInput.val("up");
-              this.sendCmd();
+              GlEvent.sendCommand.fire({value: "up"});
               return false;
             case 13: // enter
                 if (event.shiftKey) {
