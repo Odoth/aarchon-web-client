@@ -34,7 +34,7 @@ a:link, a:visited {
 }
 
 .outputText {
-    font-size: 13px;
+    font-size: small;
     background-color:black;
     font-family:"Courier", monospace;
     color:rgb(0,187,0); /* low green */
@@ -94,7 +94,7 @@ a:link, a:visited {
 #cmdInput {
     resize: none;
     font-family:"Courier", monospace;
-    font-size: 13px;
+    font-size: small;
 }
 
 #cmdInputPw {
