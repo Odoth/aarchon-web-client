@@ -184,8 +184,9 @@ export class Socket {
             let re;
             let match;
 
-            /* ansi escapes */
-            re = /^\x1b\[(\d+(?:;\d+)?)m/;
+            /* ansi escapes (including 256 color) */
+
+            re = /^\x1b\[([0-9]+(?:;[0-9]+)*)m/;
             match = re.exec(substr);
             if (match) {
                 this.outputManager.handleText(output);
@@ -194,18 +195,6 @@ export class Socket {
                 i += match[0].length;
                 let codes = match[1].split(";");
                 this.outputManager.handleAnsiGraphicCodes(codes);
-                continue;
-            }
-
-            /* xterm 256 color */
-            re = /^\x1b\[[34]8;5;\d+m/;
-            match = re.exec(substr);
-            if (match) {
-                this.outputManager.handleText(output);
-                output = "";
-
-                i += match[0].length;
-                this.outputManager.handleXtermEscape(match[0]);
                 continue;
             }
 
