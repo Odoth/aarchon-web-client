@@ -14,6 +14,8 @@ let app: express.Express;
 let server: http.Server;
 let io: SocketIO.Server;
 
+let telnetIdNext = 0;
+
 if (serverConfig.useHttpServer === true) {
     app = express();
     server = http.createServer(app);
@@ -54,25 +56,42 @@ telnetNs.on("connection", (client: SocketIO.Socket) => {
     ioEvt.clReqTelnetOpen.handle(() => {
         telnet = new net.Socket();
 
+        let telnetId: number = telnetIdNext++;
+
+        let host: string = serverConfig.gameHost;
+        let port: number = serverConfig.gamePort;
+
+        let conStartTime: Date;
+
         telnet.on("data", (data: Buffer) => {
             ioEvt.srvTelnetData.fire(data.buffer);
         });
         telnet.on("close", (had_error: boolean) => {
             ioEvt.srvTelnetClosed.fire(had_error);
             telnet = null;
+            let elapsed: number = <any>(new Date()) - <any>conStartTime;
+            tlog(telnetId, "::", client.request.connection.remoteAddress, "->", host, port, "::closed after", (elapsed/1000), "seconds");
         });
         telnet.on("drain", () => {
             canWrite = true;
             checkWrite();
         });
         telnet.on("error", (err: Error) => {
-            console.log("TELNET ERROR: ", err);
+            tlog(telnetId, "::", "TELNET ERROR:", err);
             ioEvt.srvTelnetError.fire(err.message);
         });
 
-        telnet.connect(serverConfig.gamePort, serverConfig.gameHost, () => {
-            ioEvt.srvTelnetOpened.fire(null);
-        });
+        try {
+            tlog(telnetId, "::", client.request.connection.remoteAddress, "->", host, port, "::opening");
+            telnet.connect(port, host, () => {
+                ioEvt.srvTelnetOpened.fire(null);
+                conStartTime = new Date();
+            });
+        }
+        catch (err) {
+            tlog(telnetId, "::", "ERROR CONNECTING TELNET:", err);
+            ioEvt.srvTelnetError.fire(err.message);
+        }
     });
 
     ioEvt.clReqTelnetClose.handle(() => {
@@ -97,7 +116,7 @@ if (serverConfig.useHttpServer) {
     });
 
     app.use((err: any, req: any, res: any, next: any) => {
-        console.log("App error: " +
+        tlog("App error: " +
                     "err: " + err + " | " +
                     "req: " + req + " | " +
                     "res: " + res + " | ");
@@ -105,11 +124,7 @@ if (serverConfig.useHttpServer) {
     });
 
     server.on("error", (err: Error) => {
-        console.log("Server error: ", err);
-    });
-
-    server.on("error", (err: Error) => {
-        console.log("Server error: ", err);
+        tlog("Server error:", err);
     });
 
     server.listen(serverConfig.serverPort, function() {
@@ -117,3 +132,6 @@ if (serverConfig.useHttpServer) {
     });
 }
 
+function tlog(...args: any[]) {
+    console.log("[[", new Date().toLocaleString(), "]]", ...args);
+}
