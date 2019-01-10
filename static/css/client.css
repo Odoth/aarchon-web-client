@@ -18,6 +18,10 @@ a:link, a:visited {
 #leftPanel {
     height:100%;
     width:100%;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;   
 }
 
 #cmdCont {
@@ -28,7 +32,7 @@ a:link, a:visited {
 }
     
 #winOutput {
-    height:calc(100% - 21px);
+    flex: 1;
     margin:0;
     padding:0;
 }

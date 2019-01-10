@@ -18,6 +18,10 @@ export class CommandInput {
 
         this.chkCmdStack = $("#chkCmdStack")[0] as HTMLInputElement;
 
+        let divMoveInput = document.getElementsByClassName("divMoveInput")[0] as HTMLDivElement;
+        divMoveInput.addEventListener("click", (ev: MouseEvent) => {
+            this.moveInput();
+        });
         this.$cmdInput.keydown((event: KeyboardEvent) => { return this.keydown(event); });
         this.$cmdInput.bind("input propertychange", () => { return this.inputChange(); });
         this.$cmdInputPw.keydown((event: KeyboardEvent) => { return this.pwKeydown(event); });
@@ -185,7 +189,7 @@ export class CommandInput {
                 if (this.cmd_index === -1) {
                     break;
                 }
-                
+
                 if (this.cmd_index === (this.cmd_history.length - 1)) {
                     // Already at latest, grab entered but unsent value
                     this.cmd_index = -1;
@@ -220,6 +224,17 @@ export class CommandInput {
         let cmds = localStorage.getItem("cmd_history");
         if (cmds) {
             this.cmd_history = JSON.parse(cmds);
+        }
+    }
+
+    private moveInput(): void {
+        let leftPanel = document.getElementById("leftPanel");
+        let cmdCont = document.getElementById("cmdCont");
+
+        if (leftPanel.children[0] !== cmdCont) {
+            $(leftPanel).prepend(cmdCont);
+        } else {
+            $(leftPanel).append(cmdCont);
         }
     }
 }
