@@ -16,6 +16,15 @@ export class CommandInput {
         this.$cmdInput = $("#cmdInput");
         this.$cmdInputPw = $("#cmdInputPw");
 
+        let cmdInputTextArea = this.$cmdInput[0] as HTMLTextAreaElement;
+        cmdInputTextArea.rows = 2;
+        let height2 = cmdInputTextArea.scrollHeight;
+        cmdInputTextArea.rows = 3;
+        this.pxPerLine = cmdInputTextArea.scrollHeight - height2; 
+
+        cmdInputTextArea.rows = 1;
+        cmdInputTextArea.style.height = Math.max(this.pxPerLine, 20) + "px";
+
         this.chkCmdStack = $("#chkCmdStack")[0] as HTMLInputElement;
 
         let divMoveInput = document.getElementsByClassName("divMoveInput")[0] as HTMLDivElement;
@@ -23,7 +32,7 @@ export class CommandInput {
             this.moveInput();
         });
         this.$cmdInput.keydown((event: KeyboardEvent) => { return this.keydown(event); });
-        this.$cmdInput.bind("input propertychange", () => { return this.inputChange(); });
+        this.$cmdInput.bind("input", () => { return this.inputChange(); });
         this.$cmdInputPw.keydown((event: KeyboardEvent) => { return this.pwKeydown(event); });
 
         GlEvent.setEcho.handle(this.handleSetEcho, this);
@@ -208,12 +217,25 @@ export class CommandInput {
         return false;
     }
 
+    private doInputChange: boolean = false;
+    private inpLines: number = 0;
+    private pxPerLine: number;
+
     private inputChange(): void {
-        let input = this.$cmdInput;
-        input.height("1px");
-        let scrollHeight = input[0].scrollHeight;
-        let new_height = Math.max(scrollHeight, input[0].parentElement.scrollHeight);
-        input.height(new_height + "px");
+        this.doInputChange = true;
+        setTimeout(() => {
+            if (this.doInputChange === false) {
+                return;
+            }
+            let textArea = this.$cmdInput[0] as HTMLTextAreaElement;
+            let txt = textArea.value;
+            let lines = txt.split("\n");
+            if (this.inpLines !== lines.length) {
+                this.inpLines = lines.length;
+                textArea.style.height = Math.max(this.inpLines * this.pxPerLine, 20) + "px";
+            }
+            this.doInputChange = false;
+        }, 0);
     }
 
     private saveHistory(): void {
