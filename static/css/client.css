@@ -11,7 +11,8 @@ a:link, a:visited {
 }
 
 #arcWebClient {
-    width:95vw;
+    width:100vw;
+    max-width:100%;
     height:92vh;
 }
 
