@@ -26,7 +26,8 @@ export class TriggerEditor extends TrigAlEditBase {
         + "\n"
         + "Use the send() function to send commands to the mud. Example: send('kill orc');\n"
         + "For regex triggers, 'match' will be the javascript match array, with \n"
-        + "indices according to match groups.\n";
+        + "indices according to match groups.\n"
+        + "*/\n";
 
     protected defaultPattern: string = null;
 
