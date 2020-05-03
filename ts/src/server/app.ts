@@ -28,6 +28,7 @@ let telnetNs: SocketIO.Namespace = io.of("/telnet");
 telnetNs.on("connection", (client: SocketIO.Socket) => {
     let telnet: net.Socket;
     let ioEvt = new IoEvent(client);
+    let remoteAddr = client.request.headers['x-real-ip'] || client.request.connection.remoteAddress;
 
     let writeQueue: any[] = [];
     let canWrite: boolean =  true;
@@ -70,7 +71,7 @@ telnetNs.on("connection", (client: SocketIO.Socket) => {
             ioEvt.srvTelnetClosed.fire(had_error);
             telnet = null;
             let elapsed: number = <any>(new Date()) - <any>conStartTime;
-            tlog(telnetId, "::", client.request.connection.remoteAddress, "->", host, port, "::closed after", (elapsed/1000), "seconds");
+            tlog(telnetId, "::", remoteAddr, "->", host, port, "::closed after", (elapsed/1000), "seconds");
         });
         telnet.on("drain", () => {
             canWrite = true;
@@ -82,7 +83,7 @@ telnetNs.on("connection", (client: SocketIO.Socket) => {
         });
 
         try {
-            tlog(telnetId, "::", client.request.connection.remoteAddress, "->", host, port, "::opening");
+            tlog(telnetId, "::", remoteAddr, "->", host, port, "::opening");
             telnet.connect(port, host, () => {
                 ioEvt.srvTelnetOpened.fire(null);
                 conStartTime = new Date();
@@ -105,7 +106,7 @@ telnetNs.on("connection", (client: SocketIO.Socket) => {
         writeData(data);
     });
 
-    ioEvt.srvSetClientIp.fire(client.request.connection.remoteAddress);
+    ioEvt.srvSetClientIp.fire(remoteAddr);
 });
 
 if (serverConfig.useHttpServer) {
