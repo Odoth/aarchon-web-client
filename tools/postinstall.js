@@ -1,6 +1,6 @@
 let fs = require("fs-extra");
 
-let flnameConfigClient = "configClient.js"
+let flnameConfigClient = "static/configClient.js"
 let flnameConfigClientDefault = "configClient.default.js"
 
 let flnameConfigServer = "configServer.js"

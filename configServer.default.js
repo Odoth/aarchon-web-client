@@ -4,11 +4,11 @@ var config = {};
 config.gameHost = "aarchonmud.com";
 config.gamePort = 7000;
 
-/* If false, only serve socket.io and not http */
-config.useHttpServer = true;
+/* If false, only serve socket.io and not static files */
+config.serveStatic = true;
 
-/* http server port if useHttpServer is true, else the socket.io port */
-config.serverPort = 7000;
+config.serverHost = "0.0.0.0";
+config.serverPort = 80;
 
 
 module.exports = config;
